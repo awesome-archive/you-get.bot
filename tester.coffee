@@ -11,18 +11,30 @@ Tester =
   # Run the latest release of you-get on url
   runStable: (url, out) ->
     proc = spawn command, ['-di', url]
+    # collect stdout as a single string
+    outStr = ''
     proc.stdout.on 'data', (chunk) ->
-      out chunk.toString 'utf8'
+      outStr += chunk.toString 'utf8'
+    proc.stdout.on 'end', -> out outStr
+    # collect stderr as a single string
+    errStr = ''
     proc.stderr.on 'data', (chunk) ->
-      err chunk.toString 'utf8'
+      errStr += chunk.toString 'utf8'
+    proc.stderr.on 'end', -> err errStr
 
   # Run the current develop branch of you-get on url
   runDevelop: (url, out, err) ->
     proc = spawn "./#{pypiPackage}/#{command}", ['-di', url]
+    # collect stdout as a single string
+    outStr = ''
     proc.stdout.on 'data', (chunk) ->
-      out chunk.toString 'utf8'
+      outStr += chunk.toString 'utf8'
+    proc.stdout.on 'end', -> out outStr
+    # collect stderr as a single string
+    errStr = ''
     proc.stderr.on 'data', (chunk) ->
-      err chunk.toString 'utf8'
+      errStr += chunk.toString 'utf8'
+    proc.stderr.on 'end', -> err errStr
 
   # Get the version string of the latest release
   getStableVersion: (callback) ->
