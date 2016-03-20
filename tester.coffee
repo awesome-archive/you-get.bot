@@ -9,7 +9,7 @@ upstreamUrl = process.env.UPSTREAM_URL ? 'https://github.com/soimort/you-get'
 
 Tester =
   # Run the latest release of you-get on url
-  runStable: (url, out) ->
+  runStable: (url, out, err) ->
     proc = spawn command, ['-di', url]
     # collect stdout as a single string
     outStr = ''
