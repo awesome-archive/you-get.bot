@@ -1,4 +1,5 @@
 # Simple wrapper library of GitHub API v3.
+# See: <https://developer.github.com/v3/>
 
 https = require 'https'
 
