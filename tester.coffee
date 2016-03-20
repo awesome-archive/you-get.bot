@@ -70,7 +70,7 @@ Tester =
     proc = spawn 'git',
       ['-C', "./#{pypiPackage}", 'rev-parse', 'HEAD']
     proc.stdout.on 'data', (chunk) ->
-      callback chunk.toString 'utf8'
+      callback chunk.toString('utf8')[..-2]
 
   # Update the latest release (via pip)
   updateStable: ->
@@ -94,5 +94,28 @@ Tester =
       proc = spawn 'git', ['clone', upstreamUrl]
       proc.stdout.on 'data', (chunk) ->
         console.log chunk.toString 'utf8'
+
+  # Get the version string of Python
+  getPythonVersion: (callback) ->
+    proc = spawn 'python', ['-V']
+    proc.stdout.on 'data', (chunk) ->
+      data = chunk.toString 'utf8'
+      callback data.split(' ')[1][..-2]
+
+  # Get the IP address
+  getIP: (callback) ->
+    proc = spawn 'dig',
+      ['+short', 'myip.opendns.com', '@resolver1.opendns.com']
+    proc.stdout.on 'data', (chunk) ->
+      callback chunk.toString('utf8')[..-2]
+
+  # Get the GeoIP country information
+  getGeoIP: (callback) ->
+    @getIP (ip) ->
+      proc = spawn 'geoiplookup', [ip]
+      proc.stdout.on 'data', (chunk) ->
+        data = chunk.toString 'utf8'
+        matches = data.match /GeoIP Country Edition: (.+)\n/
+        callback matches[1] if matches?
 
 module.exports = Tester
