@@ -2,3 +2,4 @@ _*
 *.js
 .emacs.*
 you-get/
+bot.sh
