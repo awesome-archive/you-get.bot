@@ -92,6 +92,12 @@ Client =
         console.log "[#{resData.closed_at}] %s",
           "issue closed: ##{resData.number} #{resData.title}"
 
+  tagIssue: (number, tags) ->
+    @editIssue number, labels: tags,
+      (resData) ->
+        console.log "[#{resData.updated_at}] %s",
+          "issue tagged: ##{resData.number} #{tags}"
+
   # TODO: more operations
 
 module.exports = Client
