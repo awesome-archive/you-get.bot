@@ -27,7 +27,7 @@ Tester =
 
   # Run the current develop branch of you-get on url
   runDevelop: (url, out, err) ->
-    proc = spawn "./#{pypiPackage}/#{command}", ['-di', url]
+    proc = spawn 'python3', ["./#{pypiPackage}/#{command}", '-di', url]
     @runProc proc, out, err
 
   # Get the version string of the latest release
@@ -40,7 +40,7 @@ Tester =
 
   # Get the version string of the current develop branch
   getDevelopVersion: (callback) ->
-    proc = spawn "./#{pypiPackage}/#{command}", ['-V']
+    proc = spawn 'python3', ["./#{pypiPackage}/#{command}", '-V']
     proc.stderr.on 'data', (chunk) ->
       text = chunk.toString 'utf8'
       versionMatches = text.match /you-get: version ([\d.]+)/
@@ -91,7 +91,8 @@ Tester =
 
   # Get the version string of Python
   getPythonVersion: (callback) ->
-    proc = spawn 'python', ['-V']
+    proc = spawn 'python3', ['-V']
+    # python3 prints its version string on stdout (while python2 is stderr)
     proc.stdout.on 'data', (chunk) ->
       data = chunk.toString 'utf8'
       callback data.split(' ')[1][..-2]
