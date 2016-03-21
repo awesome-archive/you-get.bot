@@ -121,13 +121,23 @@ Issues =
           client.tagIssue issue.number, ['invalid']
         else
           # TBD: feature request?
+          # don't know what to do (yet)
     else
-      # TBD: general discussion?
+      # no link provided - general discussion?
+      client.createComment issue.number, body: """
+      Hello @#{user},
+      Thank you for the report. \
+      It seems that you did not provide any sample link in your issue. \
+      If you are making a feature request or bug report, \
+      it is strongly recommended to include such links \
+      so we can dive further into the issue. \
+      If it's a general discussion, you may just dismiss this reminder.
+      #{signature.en}"""
 
   handle: (payload) ->
     action = payload.action
     issue = payload.issue
-    console.log '>> %s %s new issue #%s: %s',
+    console.log '>> %s %s issue #%s: %s',
       issue.user.login, action, issue.number, issue.title
 
     switch action
