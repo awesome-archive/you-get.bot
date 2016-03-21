@@ -21,12 +21,14 @@ ping = require './replyPing'
 issues = require './replyIssues'
 pullRequest = require './replyPullRequest'
 push = require './replyPush'
+release = require './replyRelease'
 mainHandler = (event, payload) ->
   switch event
     when 'ping' then ping.handle payload
     when 'issues' then issues.handle payload
     when 'pull_request' then pullRequest.handle payload
     when 'push' then push.handle payload
+    when 'release' then release.handle payload
     # TODO: more events
 
 class WebhookListener
