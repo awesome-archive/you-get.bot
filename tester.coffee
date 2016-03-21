@@ -8,33 +8,27 @@ pypiPackage = process.env.PYPI_PACKAGE ? 'you-get'
 upstreamUrl = process.env.UPSTREAM_URL ? 'https://github.com/soimort/you-get'
 
 Tester =
-  # Run the latest release of you-get on url
-  runStable: (url, out, err) ->
-    proc = spawn command, ['-di', url]
+  runProc: (proc, out, err) ->
     # collect stdout as a single string
     outStr = ''
     proc.stdout.on 'data', (chunk) ->
       outStr += chunk.toString 'utf8'
-    proc.stdout.on 'end', -> out outStr
+    proc.stdout.on 'end', -> out outStr.replace /\33[^m]*m/g, ''
     # collect stderr as a single string
     errStr = ''
     proc.stderr.on 'data', (chunk) ->
       errStr += chunk.toString 'utf8'
-    proc.stderr.on 'end', -> err errStr
+    proc.stderr.on 'end', -> err errStr.replace /\33[^m]*m/g, ''
+
+  # Run the latest release of you-get on url
+  runStable: (url, out, err) ->
+    proc = spawn command, ['-di', url]
+    @runProc proc, out, err
 
   # Run the current develop branch of you-get on url
   runDevelop: (url, out, err) ->
     proc = spawn "./#{pypiPackage}/#{command}", ['-di', url]
-    # collect stdout as a single string
-    outStr = ''
-    proc.stdout.on 'data', (chunk) ->
-      outStr += chunk.toString 'utf8'
-    proc.stdout.on 'end', -> out outStr
-    # collect stderr as a single string
-    errStr = ''
-    proc.stderr.on 'data', (chunk) ->
-      errStr += chunk.toString 'utf8'
-    proc.stderr.on 'end', -> err errStr
+    @runProc proc, out, err
 
   # Get the version string of the latest release
   getStableVersion: (callback) ->
