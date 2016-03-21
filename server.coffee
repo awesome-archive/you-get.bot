@@ -18,6 +18,7 @@ i18n = require './i18n'
 
 # Handler for webhook events
 ping = require './replyPing'
+issueComment = require './replyIssueComment'
 issues = require './replyIssues'
 pullRequest = require './replyPullRequest'
 push = require './replyPush'
@@ -25,6 +26,7 @@ release = require './replyRelease'
 mainHandler = (event, payload) ->
   switch event
     when 'ping' then ping.handle payload
+    when 'issue_comment' then issueComment.handle payload
     when 'issues' then issues.handle payload
     when 'pull_request' then pullRequest.handle payload
     when 'push' then push.handle payload
