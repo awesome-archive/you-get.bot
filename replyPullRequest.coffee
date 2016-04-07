@@ -5,6 +5,7 @@ PullRequest =
   onOpened: (pullRequest) ->
     user = pullRequest.user.login
     return if user == 'soimort-bot' # don't bother myself
+    return if user == 'soimort' # don't bother myself
 
     client.createComment pullRequest.number, body: """
     Hello @#{user},
