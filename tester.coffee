@@ -18,7 +18,7 @@ Tester =
     errStr = ''
     proc.stderr.on 'data', (chunk) ->
       errStr += chunk.toString 'utf8'
-    proc.stderr.on 'end', -> err errStr.replace /\33[^m]*m/g, ''
+    proc.stderr.on 'end', -> err errStr.replace /\33[^m]*m/g, '' unless out
 
   # Run the latest release of you-get on url
   runStable: (url, out, err) ->
