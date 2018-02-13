@@ -7,7 +7,7 @@ PullRequest =
     return if user == 'soimort-bot' # don't bother myself
     return if user == 'soimort' # don't bother myself
 
-    if pullRequest.head.user.login == "soimort" and pullRequest.commits > 1
+    if pullRequest.head.user.login == "soimort" and pullRequest.commits > 0
       client.createComment pullRequest.number, body: """
       Go screw yourself. We don't like your stupid Pull Request.
 
