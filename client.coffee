@@ -44,6 +44,24 @@ Client =
     req.write(body)
     req.end()
 
+  put: (host, path, callback) ->
+    options =
+      host: host
+      port: 443
+      method: 'PUT'
+      path: path
+      headers:
+        'Cache-Control' : 'max-age=0'
+        'User-Agent'    : userAgent
+        'Authorization' : "token #{githubToken}"
+        'Content-Length': '0'
+
+    req = https.request options, (res) ->
+      s = ''
+      res.on 'data', (chunk) -> s += chunk
+      res.on 'end', -> callback s
+    req.end()
+
   githubGet: (apiPath, callback) ->
     @get 'api.github.com', apiPath, (res) ->
       resData = JSON.parse res
@@ -55,6 +73,12 @@ Client =
     @post 'api.github.com', apiPath, reqBody, (res) ->
       resData = JSON.parse res
       console.log "POST #{apiPath}"
+      callback resData
+
+  githubPut: (apiPath, callback) ->
+    @put 'api.github.com', apiPath, (res) ->
+      resData = JSON.parse res
+      console.log "PUT #{apiPath}"
       callback resData
 
   zen: (callback) ->
@@ -97,6 +121,11 @@ Client =
       (resData) ->
         console.log "[#{resData.updated_at}] %s",
           "issue tagged: ##{resData.number} #{tags}"
+
+  lockIssue: (number) ->
+    @githubPut "/repos/#{owner}/#{repo}/issues/#{number}/lock",
+      (resData) ->
+        console.log resData
 
   # TODO: more operations
 

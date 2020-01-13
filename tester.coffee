@@ -46,13 +46,13 @@ Tester =
       versionMatches = text.match /you-get: version ([\d.]+)/
       vers = (parseInt v for v in versionMatches[1].split '.')
 
-      proc = spawn 'git',
-        ['-C', "./#{pypiPackage}", 'rev-list', 'HEAD', '--count']
+      proc = spawn 'sh',
+        ['-c', "cd ./#{pypiPackage} && git rev-list HEAD --count"]
       proc.stdout.on 'data', (chunk) ->
         headCount = parseInt chunk.toString 'utf8'
 
-        proc = spawn 'git',
-          ['-C', "./#{pypiPackage}", 'rev-list', 'origin/master', '--count']
+        proc = spawn 'sh',
+          ['c', "cd ./#{pypiPackage} && git rev-list origin/master --count"]
         proc.stdout.on 'data', (chunk) ->
           masterCount = parseInt chunk.toString 'utf8'
 
@@ -61,8 +61,8 @@ Tester =
 
   # Get the HEAD hash of the current develop branch
   getDevelopHead: (callback) ->
-    proc = spawn 'git',
-      ['-C', "./#{pypiPackage}", 'rev-parse', 'HEAD']
+    proc = spawn 'sh',
+      ['-c', "cd ./#{pypiPackage} && git rev-parse HEAD"]
     proc.stdout.on 'data', (chunk) ->
       callback chunk.toString('utf8')[..-2]
 
@@ -79,7 +79,7 @@ Tester =
       fs.lstatSync "./#{pypiPackage}" # raise an error if directory not exist
       # do a git pull
       console.log '## %s', "updating #{command} (develop)"
-      proc = spawn 'git', ['-C', "./#{pypiPackage}", 'pull']
+      proc = spawn 'sh', ['-c', "cd ./#{pypiPackage} && git pull"]
       proc.stdout.on 'data', (chunk) ->
         console.log chunk.toString 'utf8'
     catch
